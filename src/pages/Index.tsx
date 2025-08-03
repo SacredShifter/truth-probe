@@ -2,25 +2,14 @@ import { useState } from 'react';
 import { AuditForm } from '@/components/AuditForm';
 import { ResultPanel } from '@/components/ResultPanel';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
-
-interface DistortionFlag {
-  type: string;
-  severity: 'LOW' | 'MEDIUM' | 'HIGH';
-  description: string;
-}
-
-interface AuditResult {
-  resonance_score: number;
-  distortion_flags: DistortionFlag[];
-  truth_alignment: string;
-  analysis_report: string;
-}
+import { useToast } from '@/hooks/use-toast';
+import type { AuditResult } from '@/types/audit';
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<AuditResult | null>(null);
   const [originalText, setOriginalText] = useState('');
+  const { toast } = useToast();
 
   const handleAudit = async (inputText: string) => {
     setIsLoading(true);
@@ -36,10 +25,17 @@ const Index = () => {
       }
 
       setResult(data);
-      toast.success('Analysis completed');
+      toast({
+        title: "Analysis completed",
+        description: "Valeion audit has been processed successfully",
+      });
     } catch (error) {
       console.error('Audit error:', error);
-      toast.error('Analysis failed');
+      toast({
+        title: "Analysis failed",
+        description: "Unable to connect to Valeion sovereignty engine",
+        variant: "destructive",
+      });
       
       // Fallback result for demo purposes
       setResult({

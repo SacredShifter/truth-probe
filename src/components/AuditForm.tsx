@@ -2,11 +2,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
-interface AuditFormProps {
-  onSubmit: (text: string) => void;
-  isLoading: boolean;
-}
+import type { AuditFormProps } from '@/types/audit';
 
 export const AuditForm = ({ onSubmit, isLoading }: AuditFormProps) => {
   const [inputText, setInputText] = useState('');
