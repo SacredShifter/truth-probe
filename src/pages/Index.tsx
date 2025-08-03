@@ -1,8 +1,13 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { AuditForm } from '@/components/AuditForm';
 import { ResultPanel } from '@/components/ResultPanel';
+import { AuditFeed } from '@/components/AuditFeed';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { FileText, Activity, Shield } from 'lucide-react';
 import type { AuditResult } from '@/types/audit';
 
 const Index = () => {
@@ -56,24 +61,50 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="container mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-mono font-bold text-foreground mb-2">
-            VALEION-CORE
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/5">
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center mb-12">
+          <h1 className="text-6xl font-bold font-mono bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent mb-4">
+            VALEION
           </h1>
-          <p className="text-muted-foreground font-mono text-sm">
-            SOVEREIGNTY PROTOCOL // DISTORTION DETECTION ENGINE
+          <p className="text-xl text-muted-foreground font-mono max-w-2xl mx-auto mb-6">
+            Sovereignty Engine • Truth Resonance Auditor • Distortion Detection Matrix
           </p>
+          
+          <div className="flex justify-center gap-4">
+            <Link to="/truth-feed">
+              <Button variant="outline" className="font-mono">
+                <Shield className="w-4 h-4 mr-2" />
+                VIEW TRUTH FEED
+              </Button>
+            </Link>
+          </div>
         </div>
 
-        <AuditForm onSubmit={handleAudit} isLoading={isLoading} />
+        <Tabs defaultValue="audit" className="w-full max-w-4xl mx-auto">
+          <TabsList className="grid w-full grid-cols-2 mb-8">
+            <TabsTrigger value="audit" className="font-mono">
+              <FileText className="w-4 h-4 mr-2" />
+              MANUAL AUDIT
+            </TabsTrigger>
+            <TabsTrigger value="feed" className="font-mono">
+              <Activity className="w-4 h-4 mr-2" />
+              RECENT AUDITS
+            </TabsTrigger>
+          </TabsList>
 
-        {result && (
-          <div className="mt-8">
-            <ResultPanel result={result} originalText={originalText} />
-          </div>
-        )}
+          <TabsContent value="audit" className="space-y-8">
+            <AuditForm onSubmit={handleAudit} isLoading={isLoading} />
+            
+            {result && (
+              <ResultPanel result={result} originalText={originalText} />
+            )}
+          </TabsContent>
+
+          <TabsContent value="feed">
+            <AuditFeed />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

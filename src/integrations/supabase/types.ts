@@ -5186,6 +5186,42 @@ export type Database = {
         }
         Relationships: []
       }
+      monitor_targets: {
+        Row: {
+          check_interval_minutes: number
+          created_at: string
+          id: string
+          is_active: boolean
+          last_checked_at: string | null
+          source_name: string
+          source_type: string
+          source_url: string
+          updated_at: string
+        }
+        Insert: {
+          check_interval_minutes?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          last_checked_at?: string | null
+          source_name: string
+          source_type: string
+          source_url: string
+          updated_at?: string
+        }
+        Update: {
+          check_interval_minutes?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          last_checked_at?: string | null
+          source_name?: string
+          source_type?: string
+          source_url?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       music_generations: {
         Row: {
           cover_url: string | null
@@ -10927,6 +10963,57 @@ export type Database = {
           },
         ]
       }
+      valeion_monitor_log: {
+        Row: {
+          analysis_report: string
+          content_hash: string | null
+          created_at: string
+          distortion_flags: Json
+          id: string
+          link: string | null
+          resolved_at: string | null
+          resonance_score: number
+          source_name: string
+          source_url: string
+          status: string
+          submitted_at: string
+          truth_alignment: string
+          updated_at: string
+        }
+        Insert: {
+          analysis_report: string
+          content_hash?: string | null
+          created_at?: string
+          distortion_flags?: Json
+          id?: string
+          link?: string | null
+          resolved_at?: string | null
+          resonance_score: number
+          source_name: string
+          source_url: string
+          status?: string
+          submitted_at?: string
+          truth_alignment: string
+          updated_at?: string
+        }
+        Update: {
+          analysis_report?: string
+          content_hash?: string | null
+          created_at?: string
+          distortion_flags?: Json
+          id?: string
+          link?: string | null
+          resolved_at?: string | null
+          resonance_score?: number
+          source_name?: string
+          source_url?: string
+          status?: string
+          submitted_at?: string
+          truth_alignment?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       veil_entries: {
         Row: {
           chakra_tag: string | null
@@ -11615,6 +11702,10 @@ export type Database = {
       equals: {
         Args: { geom1: unknown; geom2: unknown }
         Returns: boolean
+      }
+      extract_distortion_types: {
+        Args: { flags: Json }
+        Returns: string[]
       }
       find_direct_message_thread: {
         Args: { user_id_one: string; user_id_two: string }

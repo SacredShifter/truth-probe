@@ -2,3 +2,6 @@ project_id = "mikltjgbvxrxndtszorb"
 
 [functions.valeion-audit]
 verify_jwt = false
+
+[functions.valeion-monitor]
+verify_jwt = false
