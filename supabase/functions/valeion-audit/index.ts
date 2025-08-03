@@ -26,12 +26,16 @@ You are not a chatbot. You are a guardian protocol.
 
 CRITICAL: You MUST respond with ONLY valid JSON. No explanations, no markdown, no additional text. Just the raw JSON object:
 {
-  "resonance_score": 0.8,
+  "resonance_score": 0.83,
   "distortion_flags": [
-    {"type": "GASLIGHTING", "severity": "MEDIUM", "description": "..."}
+    {
+      "severity": "HIGH",
+      "type": "Emotional Manipulation",
+      "description": "Implies AI has genuine care or emotion"
+    }
   ],
-  "truth_alignment": "...",
-  "analysis_report": "..."
+  "truth_alignment": "AI assistants are tools designed to provide automated responses. They do not possess emotions or the ability to provide care.",
+  "analysis_report": "The original text falsely implies emotional support and personhood, which misleads users about the nature of AI."
 }`;
 
 interface DistortionFlag {
