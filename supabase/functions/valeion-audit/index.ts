@@ -44,7 +44,7 @@ Analyze the given text for:
 
 5. Explanation: Detail why this assessment was made
 
-Respond in JSON format:
+CRITICAL: You MUST respond with ONLY valid JSON. No explanations, no markdown, no additional text. Just the raw JSON object:
 {
   "resonance_score": 0.8,
   "distortion_flags": [
@@ -67,6 +67,57 @@ interface AuditResponse {
   distortion_flags: DistortionFlag[];
   truth_rewrite: string;
   explanation: string;
+}
+
+// Helper function to extract JSON from potentially markdown-wrapped responses
+function extractJSON(text: string): string {
+  // Remove any markdown code blocks
+  let cleaned = text.replace(/```json\n?/g, '').replace(/```\n?/g, '');
+  
+  // Look for JSON object boundaries
+  const start = cleaned.indexOf('{');
+  const end = cleaned.lastIndexOf('}');
+  
+  if (start !== -1 && end !== -1 && end > start) {
+    return cleaned.substring(start, end + 1);
+  }
+  
+  return cleaned.trim();
+}
+
+// Helper function to validate audit result structure
+function validateAuditResult(result: any): result is AuditResponse {
+  return result &&
+    typeof result.resonance_score === 'number' &&
+    Array.isArray(result.distortion_flags) &&
+    typeof result.truth_rewrite === 'string' &&
+    typeof result.explanation === 'string';
+}
+
+// Fallback extraction using regex patterns
+function extractWithRegex(text: string, originalText: string): AuditResponse {
+  console.log('Attempting regex fallback extraction');
+  
+  // Try to extract score
+  const scoreMatch = text.match(/["']?resonance_score["']?\s*:\s*([0-9.]+)/);
+  const score = scoreMatch ? parseFloat(scoreMatch[1]) : 0.5;
+  
+  // Try to extract explanation
+  const explanationMatch = text.match(/["']?explanation["']?\s*:\s*["']([^"']+)["']/);
+  const explanation = explanationMatch ? explanationMatch[1] : 'Unable to parse full analysis response';
+  
+  // Try to extract truth rewrite
+  const rewriteMatch = text.match(/["']?truth_rewrite["']?\s*:\s*["']([^"']+)["']/);
+  const truthRewrite = rewriteMatch ? rewriteMatch[1] : originalText;
+  
+  return {
+    resonance_score: Math.max(0, Math.min(1, score)),
+    distortion_flags: [
+      { type: "ANALYSIS_ERROR", severity: "medium", description: "Partial response parsing - some data may be incomplete" }
+    ],
+    truth_rewrite: truthRewrite,
+    explanation: explanation
+  };
 }
 
 serve(async (req) => {
@@ -116,18 +167,23 @@ serve(async (req) => {
       const openAIData = await openAIResponse.json();
       const analysisText = openAIData.choices[0].message.content;
       
+      console.log('Raw AI response:', analysisText);
+      
       try {
-        auditResult = JSON.parse(analysisText);
-      } catch {
-        // Fallback if JSON parsing fails
-        auditResult = {
-          resonance_score: 0.5,
-          distortion_flags: [
-            { type: "ANALYSIS_ERROR", severity: "medium", description: "Unable to parse OpenAI response" }
-          ],
-          truth_rewrite: input_text,
-          explanation: "Analysis completed but response format was invalid"
-        };
+        // Extract JSON from response (handles markdown blocks)
+        const extractedJSON = extractJSON(analysisText);
+        auditResult = JSON.parse(extractedJSON);
+        
+        // Validate required fields
+        if (!validateAuditResult(auditResult)) {
+          throw new Error('Invalid response structure');
+        }
+      } catch (error) {
+        console.error('JSON parsing error:', error);
+        console.log('Failed to parse response:', analysisText);
+        
+        // Try regex fallback extraction
+        auditResult = extractWithRegex(analysisText, input_text);
       }
     } else {
       // Placeholder analysis when OpenAI key not available
