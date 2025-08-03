@@ -168,6 +168,23 @@ export const TruthFeed = () => {
                 BACK TO VALEION
               </Button>
             </Link>
+            <div className="flex gap-2 ml-auto">
+              <Link to="/watchlist">
+                <Button variant="outline" size="sm" className="font-mono">
+                  WATCHLIST
+                </Button>
+              </Link>
+              <Link to="/codex">
+                <Button variant="outline" size="sm" className="font-mono">
+                  CODEX
+                </Button>
+              </Link>
+              <Link to="/beacons">
+                <Button variant="outline" size="sm" className="font-mono">
+                  BEACONS
+                </Button>
+              </Link>
+            </div>
           </div>
           
           <h1 className="text-4xl font-bold font-mono text-foreground mb-2">

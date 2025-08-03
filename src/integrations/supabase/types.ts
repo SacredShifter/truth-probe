@@ -675,6 +675,99 @@ export type Database = {
         }
         Relationships: []
       }
+      beacon_dispatch_log: {
+        Row: {
+          beacon_node_id: string
+          completed_at: string | null
+          delivery_status: string
+          dispatched_at: string
+          error_message: string | null
+          id: string
+          monitor_log_id: string
+          payload: Json
+          response_status: number | null
+          response_time_ms: number | null
+          webhook_url: string
+        }
+        Insert: {
+          beacon_node_id: string
+          completed_at?: string | null
+          delivery_status?: string
+          dispatched_at?: string
+          error_message?: string | null
+          id?: string
+          monitor_log_id: string
+          payload: Json
+          response_status?: number | null
+          response_time_ms?: number | null
+          webhook_url: string
+        }
+        Update: {
+          beacon_node_id?: string
+          completed_at?: string | null
+          delivery_status?: string
+          dispatched_at?: string
+          error_message?: string | null
+          id?: string
+          monitor_log_id?: string
+          payload?: Json
+          response_status?: number | null
+          response_time_ms?: number | null
+          webhook_url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "beacon_dispatch_log_beacon_node_id_fkey"
+            columns: ["beacon_node_id"]
+            isOneToOne: false
+            referencedRelation: "beacon_nodes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "beacon_dispatch_log_monitor_log_id_fkey"
+            columns: ["monitor_log_id"]
+            isOneToOne: false
+            referencedRelation: "valeion_monitor_log"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      beacon_nodes: {
+        Row: {
+          created_at: string
+          id: string
+          last_health_check: string | null
+          metadata: Json | null
+          node_name: string
+          region: string
+          status: string
+          updated_at: string
+          webhook_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          last_health_check?: string | null
+          metadata?: Json | null
+          node_name: string
+          region: string
+          status?: string
+          updated_at?: string
+          webhook_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          last_health_check?: string | null
+          metadata?: Json | null
+          node_name?: string
+          region?: string
+          status?: string
+          updated_at?: string
+          webhook_url?: string | null
+        }
+        Relationships: []
+      }
       breath_sessions: {
         Row: {
           achievements: string[] | null

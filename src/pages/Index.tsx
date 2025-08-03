@@ -78,6 +78,18 @@ const Index = () => {
                 VIEW TRUTH FEED
               </Button>
             </Link>
+            <Link to="/watchlist">
+              <Button variant="outline" className="font-mono">
+                <Activity className="w-4 h-4 mr-2" />
+                WATCHLIST
+              </Button>
+            </Link>
+            <Link to="/codex">
+              <Button variant="outline" className="font-mono">
+                <FileText className="w-4 h-4 mr-2" />
+                CODEX OF CLARITY
+              </Button>
+            </Link>
           </div>
         </div>
 
