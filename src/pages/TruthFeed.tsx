@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -9,7 +10,7 @@ import { Progress } from '@/components/ui/progress';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { DistortionFlagCard } from '@/components/DistortionFlagCard';
 import { useToast } from '@/hooks/use-toast';
-import { AlertTriangle, Shield, ChevronDown, Filter, ExternalLink } from 'lucide-react';
+import { AlertTriangle, Shield, ChevronDown, Filter, ExternalLink, ArrowLeft } from 'lucide-react';
 import type { DistortionFlag } from '@/types/audit';
 
 interface MonitorLogEntry {
@@ -160,6 +161,15 @@ export const TruthFeed = () => {
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
+          <div className="flex items-center gap-4 mb-4">
+            <Link to="/">
+              <Button variant="outline" size="sm" className="font-mono">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                BACK TO VALEION
+              </Button>
+            </Link>
+          </div>
+          
           <h1 className="text-4xl font-bold font-mono text-foreground mb-2">
             TRUTH FEED
           </h1>
