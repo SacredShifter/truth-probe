@@ -67,13 +67,47 @@ function extractJSON(text: string): string {
   return cleaned.trim();
 }
 
-// Helper function to validate audit result structure
+// Enhanced validation function with strict type checking
 function validateAuditResult(result: any): result is AuditResponse {
-  return result &&
-    typeof result.resonance_score === 'number' &&
-    Array.isArray(result.distortion_flags) &&
-    typeof result.truth_alignment === 'string' &&
-    typeof result.analysis_report === 'string';
+  // Check if result exists and is an object
+  if (!result || typeof result !== 'object') {
+    console.error('Invalid result: not an object');
+    return false;
+  }
+  
+  // Validate resonance_score
+  if (typeof result.resonance_score !== 'number' || 
+      result.resonance_score < 0 || 
+      result.resonance_score > 1) {
+    console.error('Invalid resonance_score:', result.resonance_score);
+    return false;
+  }
+  
+  // Validate distortion_flags array
+  if (!Array.isArray(result.distortion_flags)) {
+    console.error('Invalid distortion_flags: not an array');
+    return false;
+  }
+  
+  // Validate each distortion flag
+  for (const flag of result.distortion_flags) {
+    if (!flag || typeof flag !== 'object' ||
+        typeof flag.type !== 'string' ||
+        !['LOW', 'MEDIUM', 'HIGH'].includes(flag.severity) ||
+        typeof flag.description !== 'string') {
+      console.error('Invalid distortion flag:', flag);
+      return false;
+    }
+  }
+  
+  // Validate required string fields
+  if (typeof result.truth_alignment !== 'string' ||
+      typeof result.analysis_report !== 'string') {
+    console.error('Invalid string fields');
+    return false;
+  }
+  
+  return true;
 }
 
 // Fallback extraction using regex patterns
