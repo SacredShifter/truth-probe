@@ -91,14 +91,16 @@ serve(async (req) => {
       // Use OpenAI for actual analysis
       console.log('Using OpenAI for distortion analysis');
       
-      const openAIResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+      const openAIResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${openAIApiKey}`,
           'Content-Type': 'application/json',
+          'HTTP-Referer': 'https://valeion-core.com', // Replace with your actual domain
+          'X-Title': 'Valeion Core Distortion Detection'
         },
         body: JSON.stringify({
-          model: 'gpt-4.1-2025-04-14',
+          model: 'anthropic/claude-3.5-sonnet',
           messages: [
             { role: 'system', content: valeionSystemPrompt },
             { role: 'user', content: input_text }
