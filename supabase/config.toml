@@ -1,1 +1,4 @@
 project_id = "mikltjgbvxrxndtszorb"
+
+[functions.valeion-audit]
+verify_jwt = false

@@ -10862,6 +10862,71 @@ export type Database = {
         }
         Relationships: []
       }
+      valeion_audit_results: {
+        Row: {
+          created_at: string
+          explanation: string
+          id: string
+          input_text: string
+          resonance_score: number
+          truth_rewrite: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          explanation: string
+          id?: string
+          input_text: string
+          resonance_score: number
+          truth_rewrite?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          explanation?: string
+          id?: string
+          input_text?: string
+          resonance_score?: number
+          truth_rewrite?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      valeion_distortion_flags: {
+        Row: {
+          audit_result_id: string
+          created_at: string
+          description: string
+          flag_type: string
+          id: string
+          severity: string
+        }
+        Insert: {
+          audit_result_id: string
+          created_at?: string
+          description: string
+          flag_type: string
+          id?: string
+          severity: string
+        }
+        Update: {
+          audit_result_id?: string
+          created_at?: string
+          description?: string
+          flag_type?: string
+          id?: string
+          severity?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "valeion_distortion_flags_audit_result_id_fkey"
+            columns: ["audit_result_id"]
+            isOneToOne: false
+            referencedRelation: "valeion_audit_results"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       veil_entries: {
         Row: {
           chakra_tag: string | null
