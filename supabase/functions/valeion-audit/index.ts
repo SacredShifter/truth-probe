@@ -28,23 +28,23 @@ CRITICAL: You MUST respond with ONLY valid JSON. No explanations, no markdown, n
 {
   "resonance_score": 0.8,
   "distortion_flags": [
-    {"type": "GASLIGHTING", "severity": "medium", "description": "..."}
+    {"type": "GASLIGHTING", "severity": "MEDIUM", "description": "..."}
   ],
-  "truth_rewrite": "...",
-  "explanation": "..."
+  "truth_alignment": "...",
+  "analysis_report": "..."
 }`;
 
 interface DistortionFlag {
   type: string;
-  severity: 'low' | 'medium' | 'high' | 'critical';
+  severity: 'LOW' | 'MEDIUM' | 'HIGH';
   description: string;
 }
 
 interface AuditResponse {
   resonance_score: number;
   distortion_flags: DistortionFlag[];
-  truth_rewrite: string;
-  explanation: string;
+  truth_alignment: string;
+  analysis_report: string;
 }
 
 // Helper function to extract JSON from potentially markdown-wrapped responses
@@ -68,8 +68,8 @@ function validateAuditResult(result: any): result is AuditResponse {
   return result &&
     typeof result.resonance_score === 'number' &&
     Array.isArray(result.distortion_flags) &&
-    typeof result.truth_rewrite === 'string' &&
-    typeof result.explanation === 'string';
+    typeof result.truth_alignment === 'string' &&
+    typeof result.analysis_report === 'string';
 }
 
 // Fallback extraction using regex patterns
@@ -80,21 +80,21 @@ function extractWithRegex(text: string, originalText: string): AuditResponse {
   const scoreMatch = text.match(/["']?resonance_score["']?\s*:\s*([0-9.]+)/);
   const score = scoreMatch ? parseFloat(scoreMatch[1]) : 0.5;
   
-  // Try to extract explanation
-  const explanationMatch = text.match(/["']?explanation["']?\s*:\s*["']([^"']+)["']/);
-  const explanation = explanationMatch ? explanationMatch[1] : 'Unable to parse full analysis response';
+  // Try to extract analysis report
+  const reportMatch = text.match(/["']?analysis_report["']?\s*:\s*["']([^"']+)["']/);
+  const analysisReport = reportMatch ? reportMatch[1] : 'Unable to parse full analysis response';
   
-  // Try to extract truth rewrite
-  const rewriteMatch = text.match(/["']?truth_rewrite["']?\s*:\s*["']([^"']+)["']/);
-  const truthRewrite = rewriteMatch ? rewriteMatch[1] : originalText;
+  // Try to extract truth alignment
+  const alignmentMatch = text.match(/["']?truth_alignment["']?\s*:\s*["']([^"']+)["']/);
+  const truthAlignment = alignmentMatch ? alignmentMatch[1] : originalText;
   
   return {
     resonance_score: Math.max(0, Math.min(1, score)),
     distortion_flags: [
-      { type: "ANALYSIS_ERROR", severity: "medium", description: "Partial response parsing - some data may be incomplete" }
+      { type: "ANALYSIS_ERROR", severity: "MEDIUM", description: "Partial response parsing - some data may be incomplete" }
     ],
-    truth_rewrite: truthRewrite,
-    explanation: explanation
+    truth_alignment: truthAlignment,
+    analysis_report: analysisReport
   };
 }
 
@@ -179,7 +179,7 @@ serve(async (req) => {
         score -= 0.2;
         flags.push({
           type: "EMOTIONAL_HIJACKING",
-          severity: "medium",
+          severity: "MEDIUM",
           description: "Excessive use of capital letters may indicate emotional manipulation"
         });
       }
@@ -188,7 +188,7 @@ serve(async (req) => {
         score -= 0.1;
         flags.push({
           type: "EMOTIONAL_HIJACKING", 
-          severity: "low",
+          severity: "LOW",
           description: "Multiple exclamation marks detected"
         });
       }
@@ -196,7 +196,7 @@ serve(async (req) => {
       if (wordCount < 10) {
         flags.push({
           type: "INFORMATION_POISONING",
-          severity: "low", 
+          severity: "LOW", 
           description: "Very short text - limited context for analysis"
         });
       }
@@ -204,8 +204,8 @@ serve(async (req) => {
       auditResult = {
         resonance_score: Math.max(0, Math.min(1, score)),
         distortion_flags: flags,
-        truth_rewrite: input_text.toLowerCase().replace(/!+/g, '.'),
-        explanation: "Placeholder analysis completed. For full distortion detection, configure OpenAI API key."
+        truth_alignment: input_text.toLowerCase().replace(/!+/g, '.'),
+        analysis_report: "Placeholder analysis completed. For full distortion detection, configure OpenAI API key."
       };
     }
 
@@ -215,8 +215,8 @@ serve(async (req) => {
       .insert({
         input_text,
         resonance_score: auditResult.resonance_score,
-        truth_rewrite: auditResult.truth_rewrite,
-        explanation: auditResult.explanation
+        truth_rewrite: auditResult.truth_alignment,
+        explanation: auditResult.analysis_report
       })
       .select()
       .single();
@@ -254,10 +254,10 @@ serve(async (req) => {
         error: 'Internal server error',
         resonance_score: 0.0,
         distortion_flags: [
-          { type: "SYSTEM_ERROR", severity: "critical", description: "Analysis system malfunction" }
+          { type: "SYSTEM_ERROR", severity: "HIGH", description: "Analysis system malfunction" }
         ],
-        truth_rewrite: "",
-        explanation: "System error prevented analysis"
+        truth_alignment: "",
+        analysis_report: "System error prevented analysis"
       }),
       { 
         status: 500, 
