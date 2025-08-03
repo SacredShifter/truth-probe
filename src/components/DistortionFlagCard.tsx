@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 
 interface DistortionFlag {
   type: string;
-  severity: 'low' | 'medium' | 'high' | 'critical';
+  severity: 'LOW' | 'MEDIUM' | 'HIGH';
   description: string;
 }
 
@@ -11,16 +11,14 @@ interface DistortionFlagCardProps {
   flag: DistortionFlag;
 }
 
-const getSeverityColor = (severity: string) => {
+const getSeverityColor = (severity: DistortionFlag['severity']) => {
   switch (severity) {
-    case 'low':
+    case 'LOW':
       return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30';
-    case 'medium':
+    case 'MEDIUM':
       return 'bg-orange-500/20 text-orange-300 border-orange-500/30';
-    case 'high':
+    case 'HIGH':
       return 'bg-red-500/20 text-red-300 border-red-500/30';
-    case 'critical':
-      return 'bg-red-600/20 text-red-200 border-red-600/30';
     default:
       return 'bg-muted text-muted-foreground border-border';
   }

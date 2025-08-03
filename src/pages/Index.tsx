@@ -6,15 +6,15 @@ import { toast } from 'sonner';
 
 interface DistortionFlag {
   type: string;
-  severity: 'low' | 'medium' | 'high' | 'critical';
+  severity: 'LOW' | 'MEDIUM' | 'HIGH';
   description: string;
 }
 
 interface AuditResult {
   resonance_score: number;
   distortion_flags: DistortionFlag[];
-  truth_rewrite: string;
-  explanation: string;
+  truth_alignment: string;
+  analysis_report: string;
 }
 
 const Index = () => {
@@ -47,12 +47,12 @@ const Index = () => {
         distortion_flags: [
           { 
             type: "SYSTEM_ERROR", 
-            severity: "critical", 
+            severity: "HIGH", 
             description: "Unable to connect to analysis engine. System may be compromised." 
           }
         ],
-        truth_rewrite: inputText,
-        explanation: "Connection to sovereign analysis network failed. Manual verification required."
+        truth_alignment: inputText,
+        analysis_report: "Connection to sovereign analysis network failed. Manual verification required."
       });
     } finally {
       setIsLoading(false);
